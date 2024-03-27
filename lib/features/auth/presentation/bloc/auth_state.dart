@@ -19,8 +19,3 @@ final class AuthFailed extends AuthState {
 }
 
 final class AuthForgotSuccess extends AuthState {}
-
-final class AuthLoggedIn extends AuthState {
-  final String user;
-  AuthLoggedIn({required this.user});
-}

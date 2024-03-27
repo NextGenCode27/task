@@ -1,4 +1,4 @@
-import 'package:task/features/auth/domain/entity/user_entity.dart';
+import 'package:task/core/global/entity/user_entity.dart';
 
 class UserModel extends UserEntity {
   UserModel({

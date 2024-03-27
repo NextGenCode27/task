@@ -18,7 +18,7 @@ abstract interface class AuthRemoteDatasource {
 
   Future<void> forgot({required String email});
 
-  Future<String> getCurrentUserData();
+  Future<UserModel?> getCurrentUserData();
 }
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
@@ -29,12 +29,16 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   Session? get currentSession => supabaseClient.auth.currentSession;
 
   @override
-  Future<String> getCurrentUserData() async {
+  Future<UserModel?> getCurrentUserData() async {
     try {
       if (currentSession != null) {
-        return 'Logged In';
+        final userData = await supabaseClient
+            .from('profiles')
+            .select()
+            .eq('id', currentSession!.user.id);
+        return UserModel.fromJson(userData.first);
       }
-      return 'Logged Out';
+      return null;
     } on ServerException catch (e) {
       throw ServerException(message: e.message);
     }
