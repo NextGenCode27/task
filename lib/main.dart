@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task/core/global/cubit/app_user_cubit/app_user_cubit.dart';
 import 'package:task/core/themes/light_theme.dart';
 import 'package:task/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:task/features/auth/presentation/views/welcome_view.dart';
+import 'package:task/features/auth/presentation/views/login_view.dart';
 import 'package:task/features/home/presentation/bloc/home_bloc.dart';
 import 'package:task/features/home/presentation/views/home_view.dart';
 import 'package:task/init_dependencies.dart';
@@ -14,6 +15,7 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => serviceLocator<AuthBloc>()),
+        BlocProvider(create: (context) => serviceLocator<AppUserCubit>()),
         BlocProvider(create: (context) => serviceLocator<HomeBloc>()),
       ],
       child: const MyApp(),
@@ -30,28 +32,27 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
+  void initState() {
+    super.initState();
+    context.read<AuthBloc>().add(AuthGetCurrentUserDataEvent());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
       darkTheme: ThemeData.dark(),
-      home: BlocBuilder<AuthBloc, AuthState>(
+      home: BlocSelector<AppUserCubit, AppUserState, bool>(
+        selector: (state) {
+          return state is AppUserLoggedIn;
+        },
         builder: (context, state) {
-          if (state is AuthInitial) {
-            context.read<AuthBloc>().add(AuthGetCurrentUserDataEvent());
+          if (state) {
+            return const HomeView();
+          } else {
+            return const LoginView();
           }
-          if (state is AuthLoggedIn) {
-            if (state.user == 'Logged In') {
-              return const HomeView();
-            }
-            if (state.user == 'Logged Out') {
-              return const WelcomeView();
-            }
-          }
-          if (state is AuthFailed) {
-            return const WelcomeView();
-          }
-          return const WelcomeView();
         },
       ),
     );

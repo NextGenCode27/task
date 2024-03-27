@@ -3,7 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task/core/error/error.dart';
 import 'package:task/core/error/exception.dart';
 import 'package:task/features/auth/data/data_source/remote/auth_remote_datasource.dart';
-import 'package:task/features/auth/domain/entity/user_entity.dart';
+import 'package:task/core/global/entity/user_entity.dart';
 import 'package:task/features/auth/domain/repository/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -76,10 +76,13 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, String>> getCurrentUserData() async {
+  Future<Either<Failure, UserEntity>> getCurrentUserData() async {
     try {
-      final isLoaggedIn = await authRemoteDatasource.getCurrentUserData();
-      return right(isLoaggedIn);
+      final userData = await authRemoteDatasource.getCurrentUserData();
+      if (userData == null) {
+        return left(Failure(message: 'Please, login to continue.'));
+      }
+      return right(userData);
     } on ServerException catch (e) {
       return left(
         Failure(message: e.message),
