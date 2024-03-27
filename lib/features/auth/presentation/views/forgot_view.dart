@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task/core/global/widgets/custom_button.dart';
 import 'package:task/core/utils/show_snackbar.dart';
 import 'package:task/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:task/features/auth/presentation/views/welcome_view.dart';
 import 'package:task/features/auth/presentation/widgets/auth_textfield.dart';
-import 'package:task/features/home/presentation/views/home_view.dart';
 
 class ForgotView extends StatefulWidget {
   static route() => MaterialPageRoute(builder: (context) => const ForgotView());
@@ -36,7 +36,7 @@ class _ForgotViewState extends State<ForgotView> {
           }
           if (state is AuthForgotSuccess) {
             Navigator.of(context)
-                .pushAndRemoveUntil(HomeView.route(), (route) => false);
+                .pushAndRemoveUntil(WelcomeView.route(), (route) => false);
           }
         },
         builder: (context, state) {

@@ -13,8 +13,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc({
     required LogOutUsecase logOutUsecase,
   })  : _logOutUsecase = logOutUsecase,
-        super(HomeInitial()) {
+        super(HomeInitial(currentIndex: 0)) {
     on<HomeEvent>(_mapHomeEventToState);
+    on<HomeCurrentIndexEvent>(_mapHomeCurrentIndexEventToState);
     on<HomeLogOutEvent>(_mapHomeLogOutEventToState);
   }
 
@@ -30,5 +31,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       (error) => emit(HomeFailed(error.message)),
       (user) => emit(HomeLogOut()),
     );
+  }
+
+  FutureOr<void> _mapHomeCurrentIndexEventToState(
+      HomeCurrentIndexEvent event, Emitter<HomeState> emit) {
+    emit(HomeSuccess(currentIndex: event.currentIndex));
   }
 }

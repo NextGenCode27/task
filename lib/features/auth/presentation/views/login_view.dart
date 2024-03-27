@@ -40,8 +40,8 @@ class _LoginViewState extends State<LoginView> {
             showSnackbar(context: context, content: state.message);
           }
           if (state is AuthSuccess) {
-            Navigator.of(context)
-                .pushAndRemoveUntil(HomeView.route(), (route) => false);
+            Navigator.of(context).pushAndRemoveUntil(
+                HomeView.route(state.userEntity), (route) => false);
           }
         },
         builder: (context, state) {
