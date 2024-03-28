@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task/core/global/bloc/bloc/app_bloc.dart';
 import 'package:task/core/global/cubit/app_user_cubit/app_user_cubit.dart';
 import 'package:task/features/home/presentation/bloc/home_bloc.dart';
 
@@ -29,9 +30,9 @@ class ProfileView extends StatelessWidget {
           width: size.width,
           child: Column(
             children: [
-              BlocBuilder<AppUserCubit, AppUserState>(
+              BlocBuilder<AppBloc, AppState>(
                 builder: (context, state) {
-                  if (state is AppUserLoggedIn) {
+                  if (state is AppSuccess) {
                     return ProfileContainer(
                       size: size,
                       username: state.userEntity.username,

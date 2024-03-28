@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task/core/global/bloc/bloc/app_bloc.dart';
 import 'package:task/core/global/cubit/app_user_cubit/app_user_cubit.dart';
 import 'package:task/core/usecase/usecase.dart';
 import 'package:task/core/global/entity/user_entity.dart';
@@ -19,17 +20,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final ForgotUsecase _forgotUsecase;
   final CurrentUserUsecase _currentUserUsecase;
   final AppUserCubit _appUserCubit;
+  final AppBloc _appBloc;
+
   AuthBloc({
     required LoginUsecase loginUsecase,
     required RegisterUsecase registerUsecase,
     required ForgotUsecase forgotUsecase,
     required CurrentUserUsecase currentUserUsecase,
     required AppUserCubit appUserCubit,
+    required AppBloc appBloc,
   })  : _loginUsecase = loginUsecase,
         _registerUsecase = registerUsecase,
         _forgotUsecase = forgotUsecase,
         _currentUserUsecase = currentUserUsecase,
         _appUserCubit = appUserCubit,
+        _appBloc = appBloc,
         super(AuthInitial()) {
     on<AuthEvent>(_mapAuthEventToState);
     on<AuthLoginEvent>(_mapAuthLoginEventToState);
@@ -51,8 +56,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     res.fold(
       (error) => emit(AuthFailed(message: error.message)),
       (user) {
-        _appUserCubit.updateUser(user);
+        // _appUserCubit.updateUser(user);
         emit(AuthSuccess(userEntity: user));
+        _appBloc.add(AppLoggedInEvent(userEntity: user));
       },
     );
   }
@@ -71,8 +77,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     res.fold(
       (error) => emit(AuthFailed(message: error.message)),
       (user) {
-        _appUserCubit.updateUser(user);
+        // _appUserCubit.updateUser(user);
         emit(AuthSuccess(userEntity: user));
+        _appBloc.add(AppLoggedInEvent(userEntity: user));
       },
     );
   }
@@ -92,8 +99,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     res.fold(
       (error) => emit(AuthFailed(message: error.message)),
       (user) {
-        _appUserCubit.updateUser(user);
+        // _appUserCubit.updateUser(user);
+
         emit(AuthSuccess(userEntity: user));
+        _appBloc.add(AppLoggedInEvent(userEntity: user));
       },
     );
   }
