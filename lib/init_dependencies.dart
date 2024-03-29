@@ -58,7 +58,6 @@ _initAuth() {
         registerUsecase: serviceLocator(),
         forgotUsecase: serviceLocator(),
         currentUserUsecase: serviceLocator(),
-        appUserCubit: serviceLocator(),
         appBloc: serviceLocator(),
       ),
     );

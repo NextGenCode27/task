@@ -44,27 +44,10 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
       darkTheme: ThemeData.dark(),
-      // home: BlocSelector<AppUserCubit, AppUserState, bool>(
-      //   selector: (state) {
-      //     return state is AppUserLoggedIn;
-      //   },
-      //   builder: (context, state) {
-      //     if (state) {
-      //       return const HomeView();
-      //     } else {
-      //       return const LoginView();
-      //     }
-      //   },
-      // ),
       home: BlocBuilder<AppBloc, AppState>(
         builder: (context, state) {
           if (state is AppInitial) {
             context.read<AuthBloc>().add(AuthGetCurrentUserDataEvent());
-            return const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
           }
           if (state is AppLoading) {
             return const Scaffold(

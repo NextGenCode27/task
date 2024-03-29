@@ -32,10 +32,12 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   Future<UserModel?> getCurrentUserData() async {
     try {
       if (currentSession != null) {
+        print('User Found');
         final userData = await supabaseClient
             .from('profiles')
             .select()
             .eq('id', currentSession!.user.id);
+        print(userData);
         return UserModel.fromJson(userData.first);
       }
       return null;

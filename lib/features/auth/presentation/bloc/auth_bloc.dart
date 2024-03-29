@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task/core/global/bloc/bloc/app_bloc.dart';
-import 'package:task/core/global/cubit/app_user_cubit/app_user_cubit.dart';
 import 'package:task/core/usecase/usecase.dart';
 import 'package:task/core/global/entity/user_entity.dart';
 import 'package:task/features/auth/domain/usecase/current_user_usecase.dart';
@@ -19,7 +18,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final RegisterUsecase _registerUsecase;
   final ForgotUsecase _forgotUsecase;
   final CurrentUserUsecase _currentUserUsecase;
-  final AppUserCubit _appUserCubit;
+
   final AppBloc _appBloc;
 
   AuthBloc({
@@ -27,13 +26,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required RegisterUsecase registerUsecase,
     required ForgotUsecase forgotUsecase,
     required CurrentUserUsecase currentUserUsecase,
-    required AppUserCubit appUserCubit,
     required AppBloc appBloc,
   })  : _loginUsecase = loginUsecase,
         _registerUsecase = registerUsecase,
         _forgotUsecase = forgotUsecase,
         _currentUserUsecase = currentUserUsecase,
-        _appUserCubit = appUserCubit,
         _appBloc = appBloc,
         super(AuthInitial()) {
     on<AuthEvent>(_mapAuthEventToState);
@@ -99,8 +96,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     res.fold(
       (error) => emit(AuthFailed(message: error.message)),
       (user) {
-        // _appUserCubit.updateUser(user);
-
+        print(user.phone);
         emit(AuthSuccess(userEntity: user));
         _appBloc.add(AppLoggedInEvent(userEntity: user));
       },
