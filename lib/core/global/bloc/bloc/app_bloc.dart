@@ -23,7 +23,6 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       emit(AppInitial());
     } else {
       emit(AppSuccess(userEntity: event.userEntity!));
-      print(event.userEntity!.email);
     }
   }
 }

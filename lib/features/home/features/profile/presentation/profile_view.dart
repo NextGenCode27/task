@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task/core/global/bloc/bloc/app_bloc.dart';
-import 'package:task/core/global/cubit/app_user_cubit/app_user_cubit.dart';
+import 'package:task/core/global/entity/user_entity.dart';
+import 'package:task/features/home/features/profile/presentation/edit_profile_view.dart';
 import 'package:task/features/home/presentation/bloc/home_bloc.dart';
 
 class ProfileView extends StatelessWidget {
@@ -10,12 +11,19 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    UserEntity? userEntity;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         toolbarHeight: 40,
         backgroundColor: Theme.of(context).colorScheme.onBackground,
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(EditProfileView.route(userEntity!));
+            },
+            icon: const Icon(Icons.edit),
+          ),
           IconButton(
             onPressed: () {
               context.read<HomeBloc>().add(HomeLogOutEvent());
@@ -33,11 +41,12 @@ class ProfileView extends StatelessWidget {
               BlocBuilder<AppBloc, AppState>(
                 builder: (context, state) {
                   if (state is AppSuccess) {
+                    userEntity = state.userEntity;
                     return ProfileContainer(
                       size: size,
-                      username: state.userEntity.username,
-                      email: state.userEntity.email,
-                      avatarUrl: state.userEntity.avatarUrl,
+                      username: userEntity!.username,
+                      email: userEntity!.email,
+                      avatarUrl: userEntity!.avatarUrl,
                     );
                   }
                   return const SizedBox();
